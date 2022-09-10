@@ -1,0 +1,21 @@
+{
+    "name": "splaturn/lib-component-based-item",
+    "type": "library",
+    "require-dev": {
+        "pocketmine/pocketmine-mp": "^5.0",
+        "phpstan/phpstan": "^1.8"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "net\\splaturn\\libcomponentbaseditem\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "famima65536",
+            "email": "famima65536@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}
