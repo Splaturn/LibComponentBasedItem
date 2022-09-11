@@ -35,13 +35,13 @@ class LibComponentBasedItem{
         });
     }
 
-    public function registerComponentBasedItem(Item $item, string $stringId, CompoundTag $components, Closure $serializerFunc, Closure $deserializerFunc) : void{
+    public function registerComponentBasedItem(Item $item, string $stringId, CompoundTag $components) : void{
         $dictionary = EditableItemTypeDictionary::createWithExistingDictionary(GlobalItemTypeDictionary::getInstance()->getDictionary());
         $networkRuntimeId = $dictionary->addComponentBasedItem($stringId);
         $serializer = GlobalItemDataHandlers::getSerializer();
         $deserializer = GlobalItemDataHandlers::getDeserializer();
-        $serializer->map($item, $serializerFunc);
-        $deserializer->map($stringId, $deserializerFunc);
+        $serializer->map($item, fn() => new SavedItemData($stringId));
+        $deserializer->map($stringId, fn() => $item);
 
         $componentNbt = CompoundTag::create()
             ->setTag("components", $components)
@@ -50,7 +50,7 @@ class LibComponentBasedItem{
         $this->itemComponentEntries[] = new ItemComponentPacketEntry($stringId, new CacheableNbt($componentNbt));
         $this->cachedPacket = null;
     }
-    
+
     public function getItemComponentPacket() : ItemComponentPacket{
         if($this->cachedPacket === null){
             $this->cachedPacket = ItemComponentPacket::create($this->itemComponentEntries);
