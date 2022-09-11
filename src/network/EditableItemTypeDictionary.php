@@ -8,7 +8,16 @@ use pocketmine\network\mcpe\protocol\types\ItemTypeEntry;
 
 class EditableItemTypeDictionary{
 
+    /** 
+     * @var ItemTypeEntry[]
+     * @phpstan-var list<ItemTypeEntry>
+     */
     private array $itemTypes = [];
+
+    /** 
+     * @var ItemTypeEntry[]
+     * @phpstan-var array<string, ItemTypeEntry>
+     */
     private array $occupiedStringIds = [];
 
     private int $nextRuntimeId = PHP_INT_MIN;
