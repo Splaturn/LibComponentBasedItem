@@ -29,15 +29,17 @@ class LibComponentBasedItem{
     private array $itemComponentEntries = [];
     private ?ItemComponentPacket $cachedPacket = null;
 
+    private EditableItemTypeDictionary $dictionary;
+
     public function __construct(Plugin $plugin){
         SimplePacketHandler::createMonitor($plugin)->monitorOutgoing(function(StartGamePacket $pk, NetworkSession $session) : void{
             $session->sendDataPacket($this->getItemComponentPacket());
         });
+        $this->dictionary = EditableItemTypeDictionary::createWithExistingDictionary(GlobalItemTypeDictionary::getInstance()->getDictionary());
     }
 
     public function registerComponentBasedItem(Item $item, string $stringId, CompoundTag $components) : void{
-        $dictionary = EditableItemTypeDictionary::createWithExistingDictionary(GlobalItemTypeDictionary::getInstance()->getDictionary());
-        $networkRuntimeId = $dictionary->addComponentBasedItem($stringId);
+        $networkRuntimeId = $this->dictionary->addComponentBasedItem($stringId);
         $serializer = GlobalItemDataHandlers::getSerializer();
         $deserializer = GlobalItemDataHandlers::getDeserializer();
         $serializer->map($item, fn() => new SavedItemData($stringId));
@@ -48,7 +50,12 @@ class LibComponentBasedItem{
             ->setInt("id", $networkRuntimeId)
             ->setString("name", $stringId);
         $this->itemComponentEntries[] = new ItemComponentPacketEntry($stringId, new CacheableNbt($componentNbt));
-        $this->cachedPacket = null;
+
+    }
+
+    public function flush() : void{
+        $this->cachedPacket = ItemComponentPacket::create($this->itemComponentEntries);
+        GlobalItemTypeDictionary::setInstance(new GlobalItemTypeDictionary($this->dictionary->build()));
     }
 
     public function getItemComponentPacket() : ItemComponentPacket{
