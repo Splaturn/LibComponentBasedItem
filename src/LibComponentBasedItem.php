@@ -13,8 +13,8 @@ use pocketmine\item\ItemTypeIds;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\convert\GlobalItemTypeDictionary;
 use pocketmine\network\mcpe\NetworkSession;
+use pocketmine\network\mcpe\protocol\BiomeDefinitionListPacket;
 use pocketmine\network\mcpe\protocol\ItemComponentPacket;
-use pocketmine\network\mcpe\protocol\StartGamePacket;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 use pocketmine\network\mcpe\protocol\types\ItemComponentPacketEntry;
 use pocketmine\plugin\Plugin;
@@ -32,7 +32,7 @@ class LibComponentBasedItem{
     private EditableItemTypeDictionary $dictionary;
 
     public function __construct(Plugin $plugin){
-        SimplePacketHandler::createMonitor($plugin)->monitorOutgoing(function(StartGamePacket $pk, NetworkSession $session) : void{
+        SimplePacketHandler::createMonitor($plugin)->monitorOutgoing(function(BiomeDefinitionListPacket $pk, NetworkSession $session) : void{
             $session->sendDataPacket($this->getItemComponentPacket());
         });
         $this->dictionary = EditableItemTypeDictionary::createWithExistingDictionary(GlobalItemTypeDictionary::getInstance()->getDictionary());
