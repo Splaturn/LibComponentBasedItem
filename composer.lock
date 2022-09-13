@@ -4,26 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ac04b6d808fc234606879bcde7ffc154",
-    "packages": [
-        {
-            "name": "muqsit/simple-packet-handler",
-            "version": "0.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Muqsit/SimplePacketHandler",
-                "reference": "f24d870adcfec72972b0326b30030054bf754c3b"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "muqsit\\simplepackethandler\\": [
-                        "src/muqsit/simplepackethandler"
-                    ]
-                }
-            }
-        }
-    ],
+    "content-hash": "f60ffd995e835b11333eb70d46737b0d",
+    "packages": [],
     "packages-dev": [
         {
             "name": "adhocore/json-comment",
