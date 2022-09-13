@@ -2,22 +2,14 @@
 
 namespace net\splaturn\libcomponentbaseditem;
 
-use Closure;
-use muqsit\simplepackethandler\SimplePacketHandler;
 use net\splaturn\libcomponentbaseditem\network\EditableItemTypeDictionary;
 use pocketmine\data\bedrock\item\SavedItemData;
-use pocketmine\item\Apple;
 use pocketmine\item\Item;
-use pocketmine\item\ItemIdentifier;
-use pocketmine\item\ItemTypeIds;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\convert\GlobalItemTypeDictionary;
-use pocketmine\network\mcpe\NetworkSession;
-use pocketmine\network\mcpe\protocol\BiomeDefinitionListPacket;
 use pocketmine\network\mcpe\protocol\ItemComponentPacket;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 use pocketmine\network\mcpe\protocol\types\ItemComponentPacketEntry;
-use pocketmine\plugin\Plugin;
 use pocketmine\world\format\io\GlobalItemDataHandlers;
 
 class LibComponentBasedItem{
@@ -27,14 +19,11 @@ class LibComponentBasedItem{
      * @phpstan-var list<ItemComponentPacketEntry> 
      * */
     private array $itemComponentEntries = [];
-    private ?ItemComponentPacket $cachedPacket = null;
+    private ItemComponentPacket $cachedPacket;
 
     private EditableItemTypeDictionary $dictionary;
 
-    public function __construct(Plugin $plugin){
-        SimplePacketHandler::createMonitor($plugin)->monitorOutgoing(function(BiomeDefinitionListPacket $pk, NetworkSession $session) : void{
-            $session->sendDataPacket($this->getItemComponentPacket());
-        });
+    public function __construct(){
         $this->dictionary = EditableItemTypeDictionary::createWithExistingDictionary(GlobalItemTypeDictionary::getInstance()->getDictionary());
     }
 
@@ -53,16 +42,12 @@ class LibComponentBasedItem{
 
     }
 
-    public function flush() : void{
+    public function build() : void{
         $this->cachedPacket = ItemComponentPacket::create($this->itemComponentEntries);
         GlobalItemTypeDictionary::setInstance(new GlobalItemTypeDictionary($this->dictionary->build()));
     }
 
     public function getItemComponentPacket() : ItemComponentPacket{
-        if($this->cachedPacket === null){
-            $this->cachedPacket = ItemComponentPacket::create($this->itemComponentEntries);
-        }
-
         return $this->cachedPacket;
     }
 }
