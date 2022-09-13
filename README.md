@@ -27,7 +27,7 @@ $lib->build();
  * その方法でよいです。
  */
 SimplePacketHandler::createInterceptor($plugin)
-->interceptOutgoing(function(StartGamePacket $pk, NetworkSession $session) : void{
+    ->interceptOutgoing(function(StartGamePacket $pk, NetworkSession $session) : void{
         $pk->levelSettings->experiments = new Experiments([
             'data_driven_item' => true
         ], true);
