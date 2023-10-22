@@ -49,7 +49,7 @@ class LibComponentBasedItem{
 
     public function build() : void{
         $this->cachedPacket = ItemComponentPacket::create($this->itemComponentEntries);
-        $this->rpTypeConverterItemTypeDictionary->setValue($this->dictionary->build());
+        $this->rpTypeConverterItemTypeDictionary->setValue(TypeConverter::getInstance(), $this->dictionary->build());
     }
 
     public function getItemComponentPacket() : ItemComponentPacket{
