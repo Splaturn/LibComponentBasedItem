@@ -2,10 +2,7 @@
     "name": "splaturn/lib-component-based-item",
     "type": "library",
     "require-dev": {
-		"pocketmine/bedrock-block-upgrade-schema": "dev-master",
-		"pocketmine/bedrock-data": "dev-modern-world-support",
-		"pocketmine/bedrock-item-upgrade-schema": "dev-master",
-        "pocketmine/pocketmine-mp": "^5.0.0-ALPHA",
+        "pocketmine/pocketmine-mp": "^5.6",
         "phpstan/phpstan": "^1.8"
     },
     "license": "MIT",

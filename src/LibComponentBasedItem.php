@@ -7,10 +7,13 @@ use pocketmine\data\bedrock\item\SavedItemData;
 use pocketmine\item\Item;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\convert\GlobalItemTypeDictionary;
+use pocketmine\network\mcpe\convert\TypeConverter;
 use pocketmine\network\mcpe\protocol\ItemComponentPacket;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 use pocketmine\network\mcpe\protocol\types\ItemComponentPacketEntry;
 use pocketmine\world\format\io\GlobalItemDataHandlers;
+use ReflectionClass;
+use ReflectionProperty;
 
 class LibComponentBasedItem{
 
@@ -22,9 +25,11 @@ class LibComponentBasedItem{
     private ItemComponentPacket $cachedPacket;
 
     private EditableItemTypeDictionary $dictionary;
+    private ReflectionProperty $rpTypeConverterItemTypeDictionary;
 
     public function __construct(){
-        $this->dictionary = EditableItemTypeDictionary::createWithExistingDictionary(GlobalItemTypeDictionary::getInstance()->getDictionary());
+        $this->dictionary = EditableItemTypeDictionary::createWithExistingDictionary(TypeConverter::getInstance()->getItemTypeDictionary());
+        $this->rpTypeConverterItemTypeDictionary = new ReflectionProperty(TypeConverter::class, "itemTypeDictionary");
     }
 
     public function registerComponentBasedItem(Item $item, string $stringId, CompoundTag $components) : void{
@@ -44,7 +49,7 @@ class LibComponentBasedItem{
 
     public function build() : void{
         $this->cachedPacket = ItemComponentPacket::create($this->itemComponentEntries);
-        GlobalItemTypeDictionary::setInstance(new GlobalItemTypeDictionary($this->dictionary->build()));
+        $this->rpTypeConverterItemTypeDictionary->setValue($this->dictionary->build());
     }
 
     public function getItemComponentPacket() : ItemComponentPacket{
